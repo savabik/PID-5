@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PID-5 ব্যক্তিত্ব ইনভেন্টরি — বাংলা</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  --bg:#f6f4ef;
+  --surface:#ffffff;
+  --text:#1c2621;
+  --text-soft:#5b655f;
+  --border:#dcd6c8;
+  --accent:#2f6f5e;
+  --accent-dark:#204d41;
+  --accent-soft:#e2ede8;
+  --danger:#a4432f;
+  --focus:#1a5cff;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme: dark){
+    --bg:#161a18;
+    --surface:#1f2522;
+    --text:#eae7df;
+    --text-soft:#a9b0aa;
+    --border:#39423d;
+    --accent:#7fbfa8;
+    --accent-dark:#a7d8c5;
+    --accent-soft:#233833;
+    --danger:#e0917d;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161a18; --surface:#1f2522; --text:#eae7df; --text-soft:#a9b0aa;
+  --border:#39423d; --accent:#7fbfa8; --accent-dark:#a7d8c5; --accent-soft:#233833; --danger:#e0917d;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px); height:100%;}
+*{box-sizing:border-box;}
+body{
+  margin:0; min-height:100%;
+  background:var(--bg); color:var(--text);
+  font-family:'Hind Siliguri','Noto Sans',sans-serif;
+  line-height:1.6;
+}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 64px;}
+header.top{
+  position:sticky; top:0; z-index:5;
+  padding-top:calc(14px + env(safe-area-inset-top,0px));
+  background:var(--bg); border-bottom:1px solid var(--border);
+}
+header.top .inner{max-width:760px;margin:0 auto;padding:0 20px 12px;}
+h1{font-size:1.28rem; margin:0 0 4px; font-weight:700; color:var(--accent-dark);}
+.sub{color:var(--text-soft); font-size:0.92rem; margin:0 0 12px;}
+.progressbar{height:8px;border-radius:99px;background:var(--accent-soft);overflow:hidden;}
+.progressbar > div{height:100%;background:var(--accent);transition:width .3s;}
+.progress-label{font-size:0.8rem;color:var(--text-soft);margin-top:6px;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 20px;margin:18px 0;}
+.intro p{margin:0 0 12px;}
+.intro label{display:block;font-size:0.85rem;color:var(--text-soft);margin-bottom:4px;}
+.intro input{width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font:inherit;margin-bottom:12px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;}
+@media (max-width:480px){.grid2{grid-template-columns:1fr;}}
+
+.item{padding:16px 0;border-top:1px solid var(--border);}
+.item:first-child{border-top:none;padding-top:0;}
+.item .qtext{margin:0 0 12px;font-size:1.02rem;}
+.item .qnum{color:var(--accent);font-weight:600;margin-inline-end:6px;}
+.options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+@media (max-width:560px){.options{grid-template-columns:repeat(2,1fr);}}
+.opt{position:relative;}
+.opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;cursor:pointer;margin:0;}
+.opt span{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  min-height:52px;padding:8px 6px;border-radius:9px;border:1px solid var(--border);
+  font-size:0.82rem;color:var(--text-soft);
+}
+.opt input:checked + span{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+.opt input:focus-visible + span{outline:2px solid var(--focus);outline-offset:2px;}
+
+.navrow{display:flex;justify-content:space-between;gap:10px;margin-top:6px;}
+button{
+  font:inherit; cursor:pointer; border-radius:10px; border:1px solid var(--accent);
+  padding:11px 18px; background:var(--accent); color:#fff; font-weight:600;
+}
+button.ghost{background:transparent;color:var(--accent);}
+button:disabled{opacity:0.45;cursor:not-allowed;}
+button.small{padding:8px 14px;font-size:0.9rem;}
+
+.facet-row{display:flex;align-items:center;gap:10px;margin:10px 0;}
+.facet-name{flex:0 0 190px;font-size:0.86rem;color:var(--text-soft);}
+.bar-track{flex:1;height:10px;background:var(--accent-soft);border-radius:99px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--accent);border-radius:99px;}
+.facet-score{flex:0 0 34px;text-align:end;font-size:0.86rem;font-weight:600;}
+.domain-block{margin-bottom:22px;}
+.domain-title{font-weight:700;color:var(--accent-dark);margin-bottom:4px;}
+
+.notice{font-size:0.85rem;color:var(--text-soft);border-inline-start:3px solid var(--accent);padding:10px 14px;background:var(--accent-soft);border-radius:0 8px 8px 0;margin:16px 0;}
+.notice.warn{border-inline-start-color:var(--danger);}
+footer{text-align:center;color:var(--text-soft);font-size:0.8rem;margin-top:30px;}
+.hidden{display:none !important;}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <h1>PID-5 ব্যক্তিত্ব ইনভেন্টরি — বাংলা</h1>
+    <p class="sub" id="pageLabel">শুরু করুন</p>
+    <div class="progressbar"><div id="progressFill" style="width:0%"></div></div>
+    <p class="progress-label" id="progressLabel">০ / ২২০ প্রশ্নের উত্তর দেওয়া হয়েছে</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="card intro" id="introCard">
+    <p><strong>ব্যবহারকারীর জন্য নির্দেশনা:</strong> নিচে বিভিন্ন মানুষ নিজেদের সম্পর্কে যা বলতে পারেন এমন একগুচ্ছ বাক্য দেওয়া আছে। আপনি নিজেকে কীভাবে বর্ণনা করবেন তা আমরা জানতে চাই। এখানে কোনো "ঠিক" বা "ভুল" উত্তর নেই। প্রতিটি বাক্য মনোযোগ দিয়ে পড়ে আপনাকে সবচেয়ে ভালোভাবে বর্ণনা করে এমন উত্তরটি বেছে নিন।</p>
+    <div class="grid2">
+      <div><label for="fName">নাম / আইডি (ঐচ্ছিক)</label><input id="fName" type="text"></div>
+      <div><label for="fAge">বয়স</label><input id="fAge" type="number" min="18" max="120"></div>
+      <div><label for="fSex">লিঙ্গ</label><input id="fSex" type="text" placeholder="পুরুষ / নারী / অন্যান্য"></div>
+      <div><label for="fDate">তারিখ</label><input id="fDate" type="date"></div>
+    </div>
+    <div class="notice">এই পরীক্ষাটি শুধুমাত্র গবেষণা ও তথ্যগত উদ্দেশ্যে ব্যবহারের জন্য তৈরি — এটি কোনো ক্লিনিক্যাল নির্ণয় (diagnosis) নয়। ফলাফল কোনো প্রশিক্ষিত মানসিক স্বাস্থ্য বিশেষজ্ঞের মূল্যায়ন প্রতিস্থাপন করে না।</div>
+    <button id="startBtn">শুরু করুন</button>
+  </section>
+
+  <form id="quizForm" class="hidden"></form>
+
+  <div id="navArea" class="hidden">
+    <div class="navrow">
+      <button type="button" class="ghost" id="prevBtn">← পূর্ববর্তী</button>
+      <button type="button" id="nextBtn">পরবর্তী →</button>
+    </div>
+  </div>
+
+  <section class="card hidden" id="resultsCard"></section>
+
+  <footer>PID-5 (Adult, Full Version) — Krueger, Derringer, Markon, Watson &amp; Skodol, 2013, American Psychiatric Association. বাংলা রূপান্তর ব্যবহারকারীর সরবরাহকৃত অনুবাদ অনুসারে।<br>
+  যদি আপনি নিজেকে আঘাত করার বা জীবন শেষ করার চিন্তা নিয়ে সংগ্রাম করছেন, দয়া করে এখনই কোনো বিশ্বস্ত মানুষ, স্থানীয় জরুরি সেবা, অথবা মানসিক স্বাস্থ্য বিশেষজ্ঞের সাথে যোগাযোগ করুন।</footer>
+</div>
+
+<script>
+const ITEMS = [
+"অন্যরা যেভাবে কোনো কিছু থেকে আনন্দ পায় বলে মনে হয়, আমি সেভাবে ততটা আনন্দ পাই না।",
+"অনেক মানুষই আমার ক্ষতি করার জন্য উঠে-পড়ে লেগেছে।",
+"মানুষ মনে করবে আমি বেপরোয়া এবং অনেক সময় না ভেবেই কাজ করি।",
+"আমার মনে হয় আমি সম্পূর্ণ আবেগের তাড়নায় কাজ করি।",
+"আমার প্রায়ই এমন অস্বাভাবিক চিন্তা আসে, যা কাউকে বোঝানো কঠিন।",
+"অন্য কিছু আমার মনোযোগ কেড়ে নিলে আমি কথোপকথনের ধারাবাহিকতা হারিয়ে ফেলি।",
+"আমি ঝুঁকিপূর্ণ পরিস্থিতি এড়িয়ে চলি।",
+"আমার আবেগের ব্যাপারে মানুষজন বলে, আমি নাকি একেবারে পাথরের মানুষ।",
+"অন্যরা কী চায় তার ওপর নির্ভর করে আমি আমার কাজ পরিবর্তন করি।",
+"আমি মানুষের খুব কাছাকাছি যেতে পছন্দ করি না।",
+"আমি প্রায়ই শারীরিক মারামারিতে জড়িয়ে পড়ি।",
+"আমাকে ভালোবাসার মতো কেউ না থাকলে আমি তা নিয়ে ভীষণ আতঙ্কিত হই।",
+"অভদ্র ও বন্ধুত্বহীন হওয়া আমার স্বভাবেরই একটি অংশ।",
+"মানুষ যেন আমাকে লক্ষ্য করে, সে জন্য আমি কিছু কিছু কাজ করি।",
+"অন্যরা আমার কাছ থেকে যা আশা করে, আমি সাধারণত তা-ই করি।",
+"কোনো কাজের পরিণতি কী হতে পারে তা না ভেবেই আমি প্রায়ই আবেগের বশে কাজ করি।",
+"যদিও আমি জানি যে এটা ঠিক নয়, তবুও আমি হুটহাট সিদ্ধান্ত নেওয়া থামাতে পারি না।",
+"কখনো কখনো কোনো কারণ ছাড়াই আমার মনের ভাব বদলে যায়।",
+"আমার কারণে অন্য মানুষ কষ্ট পেলেও আমি সত্যিই পরোয়া করি না।",
+"আমি নিজের মধ্যেই থাকি।",
+"আমি প্রায়ই এমন কথা বলি যা অন্যদের কাছে অদ্ভুত বা অস্বাভাবিক মনে হয়।",
+"আমি সবসময় আগে থেকে কোনো পরিকল্পনা না করে হঠাৎ করে কিছু করে ফেলি।",
+"কোনো কিছুতেই আমার তেমন আগ্রহ হয় না।",
+"অন্যরা মনে হয় আমার আচরণকে অদ্ভুত মনে করে।",
+"মানুষ আমাকে বলেছে যে আমি বিষয়গুলো নিয়ে খুব অদ্ভুতভাবে চিন্তা করি।",
+"আমি প্রায় কখনোই জীবন উপভোগ করি না।",
+"আমি প্রায়ই মনে করি, আমি যা করি তার কোনো গুরুত্বই নেই।",
+"কেউ এমন ছোটখাটো কিছু করলে, যা আমাকে বিরক্ত করে, আমি তার ওপর রেগে যাই।",
+"আমি কোনো কিছুতেই মনোযোগ ধরে রাখতে পারি না।",
+"আমি একজন প্রাণবন্ত ও উদ্যমী মানুষ।",
+"অন্যরা আমাকে দায়িত্বজ্ঞানহীন মনে করে।",
+"প্রয়োজন হলে আমি নিষ্ঠুর হতে পারি।",
+"আমার চিন্তা প্রায়ই অদ্ভুত বা অস্বাভাবিক দিকে চলে যায়।",
+"আমাকে বলা হয়েছে যে জিনিসপত্র ঠিক জায়গায় আছে কি না তা নিশ্চিত করতে আমি অতিরিক্ত সময় ব্যয় করি।",
+"আমি ঝুঁকিপূর্ণ খেলাধুলা ও কার্যকলাপ এড়িয়ে চলি।",
+"স্বপ্ন ও জেগে থাকার অবস্থার মধ্যে পার্থক্য বুঝতে আমার কখনো কখনো সমস্যা হয়।",
+"কখনো কখনো আমার অদ্ভুত মনে হয় যে, শরীরের কিছু অংশ যেন মৃত বা আমার নিজের নয়।",
+"আমি সহজেই রেগে যাই।",
+"বিপজ্জনক কাজ করার ক্ষেত্রে আমার কোনো সীমা নেই।",
+"সত্যি বলতে, আমি অন্য মানুষের চেয়ে বেশি গুরুত্বপূর্ণ।",
+"আমার সঙ্গে ঘটে যাওয়া ঘটনা সম্পর্কে আমি এমন গল্প বানাই যা সম্পূর্ণ মিথ্যা।",
+"মানুষ প্রায়ই আমার এমন কিছু কাজের কথা বলে, যেগুলোর কথা আমার একদমই মনে নেই।",
+"মানুষ যেন আমাকে অবশ্যই প্রশংসা করে, সে জন্য আমি কিছু করি।",
+"এটা অদ্ভুত, তবে কখনো কখনো সাধারণ জিনিসগুলোকে স্বাভাবিকের চেয়ে অন্যরকম আকৃতির মনে হয়।",
+"কোনো ঘটনার প্রতি আমার আবেগগত প্রতিক্রিয়া খুব বেশি সময় স্থায়ী হয় না।",
+"কোনো কাজ শেষ করার সময় হয়ে গেলেও, সেই কাজটি থামানো আমার জন্য কঠিন হয়ে পড়ে।",
+"সামনে কী করতে হবে তা পরিকল্পনা করতে আমি ভালো নই।",
+"আমি এমন অনেক কাজ করি যেগুলো অন্যরা ঝুঁকিপূর্ণ মনে করে।",
+"মানুষ বলে যে আমি ছোটখাটো বিষয় নিয়ে অতিরিক্ত মনোযোগ দিই।",
+"একা থাকার বিষয়টি নিয়ে আমি অনেক চিন্তা করি।",
+"কোনো কাজ একদম নিখুঁত করার চেষ্টা করতে গিয়ে আমি অনেক কিছু থেকে বঞ্চিত হয়েছি।",
+"আমার চিন্তাগুলো অন্যদের কাছে প্রায়ই অর্থহীন মনে হয়।",
+"আমি যা চাই তা পাওয়ার জন্য নিজের সম্পর্কে বিভিন্ন কথা বানিয়ে বলি।",
+"অন্য মানুষকে কষ্ট পেতে দেখলে এটা আমাকে তেমন বিরক্ত করে না।",
+"মানুষ প্রায়ই আমার দিকে এমনভাবে তাকায়, যেন আমি একেবারে অদ্ভুত কিছু বলে ফেলেছি।",
+"কিছু একটা পাওয়ার জন্য যে আমি তাদের তেল মারছি, সেটা মানুষ বুঝতে পারে না।",
+"একা থাকার চেয়ে আমি বরং একটা খারাপ সম্পর্কের মধ্যে থাকতেই পছন্দ করব।",
+"আমি সাধারণত কোনো কাজ করার আগে চিন্তা করি।",
+"ঘুমিয়ে পড়ার সময় বা ঘুম থেকে জেগে ওঠার সময় আমি প্রায়ই স্বপ্নের মতো জীবন্ত ছবি দেখতে পাই।",
+"কাজ না করলেও আমি বারবার একইভাবে কোনো কিছু করার চেষ্টা করতে থাকি।",
+"আমি নিজের প্রতি খুবই অসন্তুষ্ট।",
+"প্রায় অন্য সবার তুলনায় আমার আবেগগত প্রতিক্রিয়া অনেক বেশি তীব্র।",
+"অন্যরা আমাকে যা করতে বলে, আমি তা করি।",
+"এমনকি কয়েক ঘণ্টার জন্যও একা ফেলে রাখা আমি সহ্য করতে পারি না।",
+"আমার এমন কিছু অসাধারণ গুণ আছে, যা খুব কম মানুষেরই আছে।",
+"ভবিষ্যৎ আমার কাছে অত্যন্ত আশাহীন মনে হয়।",
+"আমি ঝুঁকি নিতে পছন্দ করি।",
+"অন্য বিষয়গুলো আমার মনোযোগ কেড়ে নেওয়ার কারণে আমি লক্ষ্য অর্জন করতে পারি না।",
+"আমি যখন কিছু করতে চাই, সেটা ঝুঁকিপূর্ণ হতে পারে—এই সম্ভাবনা আমাকে তা করা থেকে বিরত রাখে না।",
+"অন্যরা মনে হয় আমাকে বেশ অদ্ভুত বা অস্বাভাবিক মনে করে।",
+"আমার চিন্তাগুলো অদ্ভুত ও অনুমান করা কঠিন।",
+"আমি অন্য মানুষের অনুভূতি নিয়ে পরোয়া করি না।",
+"জীবনে যা চাই তা পেতে হলে কখনো কখনো অন্যের স্বার্থে আঘাত করতে হয়।",
+"অন্য মানুষের মনোযোগ পাওয়া আমার খুব ভালো লাগে।",
+"আমি যেকোনো ধরনের দলগত কার্যকলাপ এড়িয়ে চলার জন্য যথাসাধ্য চেষ্টা করি।",
+"আমি যা চাই তা পাওয়ার জন্য প্রয়োজনে কৌশলে বা গোপনে কাজ করতে পারি।",
+"কখনো কখনো পরিচিত কোনো জিনিসের দিকে তাকালে মনে হয় যেন সেটি আমি প্রথমবার দেখছি।",
+"এক কাজ থেকে অন্য কাজে পরিবর্তন করা আমার জন্য কঠিন।",
+"যেসব ভয়াবহ ঘটনা ঘটতে পারে, সেগুলো নিয়ে আমি অনেক বেশি দুশ্চিন্তা করি।",
+"আমি যা করছি তা ভালোভাবে না চললেও, কীভাবে কাজটি করছি তা পরিবর্তন করতে আমার অসুবিধা হয়।",
+"আমি মারা গেলে পৃথিবীর জন্য ভালো হতো।",
+"আমি মানুষের কাছ থেকে দূরত্ব বজায় রাখি।",
+"আমি প্রায়ই কী নিয়ে ভাবছি, তা নিয়ন্ত্রণ করতে পারি না।",
+"আমি আবেগপ্রবণ হই না।",
+"কী করতে হবে তা অন্য কেউ বলে দিলে আমার বিরক্তি লাগে, এমনকি সেই ব্যক্তি দায়িত্বশীল বা কর্তৃত্বপূর্ণ অবস্থানে থাকলেও।",
+"ছোটখাটো নানা উপায়ে আমি মানুষকে হতাশ করেছি—এজন্য আমি খুবই লজ্জিত বোধ করি।",
+"সামান্য বিপজ্জনক কিছু হলেও আমি তা এড়িয়ে চলি।",
+"এমনকি অল্প সময়ের জন্যও নির্দিষ্ট কোনো লক্ষ্য অনুসরণ করতে আমার অসুবিধা হয়।",
+"আমি আমার জীবন থেকে প্রেম-ভালোবাসাকে দূরে রাখতেই পছন্দ করি।",
+"আমি কখনোই অন্য কোনো ব্যক্তির ক্ষতি করব না।",
+"আমি আমার আবেগ তীব্রভাবে প্রকাশ করি না।",
+"আমার খুব সহজেই রাগ উঠে যায়।",
+"অতীতে আমার করা ভুলগুলোর কারণে খারাপ কিছু ঘটবে—এ নিয়ে আমি প্রায়ই দুশ্চিন্তা করি।",
+"আমার কিছু অস্বাভাবিক ক্ষমতা আছে, যেমন—কখনো কখনো অন্য কেউ কী ভাবছে তা হুবহু জানতে পারি।",
+"আমি ভবিষ্যতের কথা ভাবলে খুব নার্ভাস হয়ে পড়ি।",
+"আমি খুব কমই কোনো বিষয় নিয়ে দুশ্চিন্তা করি।",
+"আমি প্রেমে পড়ার অনুভূতি উপভোগ করি।",
+"আমি অপ্রয়োজনীয় ঝুঁকি নেওয়ার চেয়ে নিরাপদভাবে চলতেই পছন্দ করি।",
+"আমি কখনো কখনো এমন কিছু শুনেছি, যা অন্যরা শুনতে পায়নি।",
+"আমি কিছু নির্দিষ্ট বিষয়ে আটকে যাই এবং থামতে পারি না।",
+"মানুষ বলে আমার অনুভূতি বোঝা কঠিন।",
+"আমি অত্যন্ত আবেগপ্রবণ মানুষ।",
+"সুযোগ পেলে অন্যরা আমার সুবিধা নেবে।",
+"আমি প্রায়ই নিজেকে ব্যর্থ মনে করি।",
+"আমি যা করি তা পুরোপুরি নিখুঁত না হলে সেটি গ্রহণযোগ্য নয়।",
+"আমার প্রায়ই অস্বাভাবিক অভিজ্ঞতা হয়, যেমন এমন কারও উপস্থিতি অনুভব করা যে আসলে সেখানে নেই।",
+"মানুষকে আমি যা চাই তা করতে বাধ্য করাতে আমি ভালো।",
+"কোনো সম্পর্ক ঘনিষ্ঠ হতে শুরু করলে আমি সেটি ভেঙে দিই।",
+"আমি সবসময় কোনো না কোনো বিষয় নিয়ে চিন্তা করি।",
+"আমি প্রায় সবকিছু নিয়েই চিন্তা করি।",
+"ভিড়ের মধ্যে আলাদা করে নজরে পড়তে আমার ভালো লাগে।",
+"মাঝে মাঝে সামান্য ঝুঁকি নিতে আমার আপত্তি নেই।",
+"আমার আচরণ প্রায়ই সাহসী হয় এবং মানুষের মনোযোগ আকর্ষণ করে।",
+"আমি প্রায় সবার চেয়ে ভালো।",
+"সবকিছু গুছিয়ে ও ঠিকঠাক করে রাখার আমার প্রয়োজন নিয়ে মানুষজন অভিযোগ করে।",
+"যারা আমার সঙ্গে অন্যায় করেছে তাদের প্রতিশোধ আমি সবসময় নিই।",
+"কেউ আমাকে ঠকাতে বা ক্ষতি করতে চাইছে কি না সে বিষয়ে আমি সবসময় সতর্ক থাকি।",
+"কী করা দরকার তার ওপর মনোযোগ ধরে রাখতে আমার সমস্যা হয়।",
+"আমি প্রায়ই আত্মহত্যার কথা বলি।",
+"যৌন সম্পর্ক স্থাপনের প্রতি আমার তেমন আগ্রহ নেই।",
+"আমি অনেক বিষয়ে আটকে যাই।",
+"খুব সামান্য কারণেও আমি সহজেই আবেগপ্রবণ হয়ে যাই।",
+"এতে অন্যরা বিরক্ত হলেও, আমি যা কিছু করি সবকিছুতেই নিখুঁত হওয়ার জন্য জোর দিই।",
+"দৈনন্দিন কাজকর্ম নিয়ে আমি প্রায় কখনোই আনন্দিত বোধ করি না।",
+"অন্যদের মিষ্টি কথা বললে আমি যা চাই তা পেতে সাহায্য হয়।",
+"জীবনে এগিয়ে যেতে হলে কখনো কখনো বাড়িয়ে বলা দরকার।",
+"জীবনে একা হয়ে যাওয়াকে আমি অন্য যেকোনো কিছুর চেয়ে বেশি ভয় পাই।",
+"কোনো একটি কাজ করার পদ্ধতি যে কাজ করবে না তা পরিষ্কার বোঝা গেলেও, আমি সেই পদ্ধতিতেই আটকে থাকি।",
+"নিজের ও অন্যদের জিনিসপত্র নিয়ে আমি প্রায়ই বেশ অসাবধানী।",
+"আমি খুব উদ্বিগ্ন স্বভাবের মানুষ।",
+"মানুষ মূলত বিশ্বাসযোগ্য।",
+"আমি সহজেই মনোযোগ হারিয়ে ফেলি।",
+"অন্যদের কাছ থেকে আমি যেন সবসময় অন্যায্য আচরণই পাই।",
+"এতে আমার লাভ হলে প্রতারণা করতে আমি দ্বিধা করি না।",
+"কোনো কিছু নিখুঁত হয়েছে কি না নিশ্চিত হওয়ার জন্য আমি তা কয়েকবার পরীক্ষা করি।",
+"অন্যদের সঙ্গে সময় কাটাতে আমার ভালো লাগে না।",
+"কোনো কিছু চালিয়ে যাওয়ার তেমন যৌক্তিকতা না থাকলেও, আমি তা চালিয়ে যেতে বাধ্য বোধ করি।",
+"মুহূর্তে মুহূর্তে আমার আবেগ কোন দিকে যাবে তা আমি কখনো জানি না।",
+"আমি এমন কিছু দেখেছি যা আসলে সেখানে ছিল না।",
+"জিনিসপত্র একটি নির্দিষ্টভাবে করা আমার কাছে গুরুত্বপূর্ণ।",
+"আমি সবসময় সবচেয়ে খারাপ কিছু ঘটবে বলে আশা করি।",
+"কঠিন হলেও আমি সত্য বলার চেষ্টা করি।",
+"আমি বিশ্বাস করি কিছু মানুষ তাদের মন দিয়ে জিনিস সরাতে পারে।",
+"আমি দীর্ঘ সময় কোনো বিষয়ে মনোযোগ দিতে পারি না।",
+"আমি প্রেমের সম্পর্ক থেকে দূরে থাকি।",
+"বন্ধুত্ব করার ব্যাপারে আমার আগ্রহ নেই।",
+"মানুষের সঙ্গে কথা বলার সময় আমি যতটা সম্ভব কম কথা বলি।",
+"একজন মানুষ হিসেবে আমি মূল্যহীন।",
+"কেউ আমাকে ছেড়ে চলে যাওয়া ঠেকাতে আমি প্রায় যেকোনো কিছু করতে পারি।",
+"কখনো কখনো শুধু আমার চিন্তা অন্যদের কাছে পাঠিয়েই আমি তাদের প্রভাবিত করতে পারি।",
+"জীবনকে আমার বেশ অন্ধকার/আশাহীন মনে হয়।",
+"আমি এমন অদ্ভুতভাবে চিন্তা করি যা অধিকাংশ মানুষের কাছে অর্থপূর্ণ হয় না।",
+"আমার কাজের কারণে অন্যরা কষ্ট পেলেও তাতে আমার কিছু যায় আসে না।",
+"কখনো কখনো মনে হয় অন্য কারও চিন্তা দ্বারা আমি নিয়ন্ত্রিত হচ্ছি।",
+"আমি জীবনকে পরিপূর্ণভাবে উপভোগ করি।",
+"আমি এমন প্রতিশ্রুতি দিই যা আসলে রাখার কোনো ইচ্ছা আমার থাকে না।",
+"কোনো কিছুই আমাকে ভালো অনুভব করায় না।",
+"বিভিন্ন ধরনের ছোটখাটো বিষয়েও আমি সহজেই বিরক্ত হয়ে যাই।",
+"কোনো কাজ কতটা অনিরাপদ হতে পারে তা পরোয়া না করে আমি যা চাই তা করি।",
+"আমি প্রায়ই আমার বিল পরিশোধ করতে ভুলে যাই।",
+"আমি মানুষের খুব বেশি কাছাকাছি যেতে পছন্দ করি না।",
+"মানুষকে প্রতারণা/চালাকি করে নিজের সুবিধা নেওয়ায় আমি ভালো।",
+"সবকিছুই আমার কাছে অর্থহীন মনে হয়।",
+"আমি কখনো ঝুঁকি নিই না।",
+"ছোটখাটো প্রতিটি বিষয়েও আমি আবেগপ্রবণ হয়ে পড়ি।",
+"আমার কারণে অন্য মানুষের অনুভূতিতে আঘাত লাগলেও তা বড় কোনো ব্যাপার নয়।",
+"আমি কখনো অন্যদের কাছে আমার আবেগ প্রকাশ করি না।",
+"আমি প্রায়ই খুব অসুখী/দুঃখী বোধ করি।",
+"একজন মানুষ হিসেবে আমার কোনো মূল্য নেই।",
+"আমি সাধারণত বেশ শত্রুভাবাপন্ন।",
+"দায়িত্ব এড়ানোর জন্য আমি জায়গা ছেড়ে পালিয়ে গিয়েছি।",
+"আমাকে একাধিকবার বলা হয়েছে যে আমার বেশ কিছু অদ্ভুত অভ্যাস বা বৈশিষ্ট্য আছে।",
+"এমন একজন মানুষ হতে আমার ভালো লাগে যাকে মানুষ লক্ষ্য করে।",
+"খারাপ কিছু ঘটতে পারে—এই ভয়ে আমি সবসময় ভীত বা উদ্বিগ্ন থাকি।",
+"আমি কখনোই একা থাকতে চাই না।",
+"কোনো কিছু যতটা ভালো করা সম্ভব তার কাছাকাছি নিয়ে যাওয়ার পরও আমি সেটিকে নিখুঁত করার চেষ্টা করতে থাকি।",
+"আমি খুব কমই মনে করি যে আমার পরিচিত মানুষগুলো আমার সুবিধা নেওয়ার চেষ্টা করছে।",
+"আমি জানি, জীবনের কোনো একসময় আমি আত্মহত্যা করব।",
+"আমার পরিচিত প্রায় সবার তুলনায় আমি অনেক বেশি অর্জন করেছি।",
+"নিজের ইচ্ছামতো কিছু করানোর জন্য প্রয়োজন হলে আমি সহজেই আকর্ষণীয়/মোহনীয় আচরণ করতে পারি।",
+"আমার আবেগ অনুমান করা কঠিন।",
+"প্রয়োজন না হলে আমি মানুষের সঙ্গে যোগাযোগ করি না।",
+"অন্য মানুষের সমস্যাগুলো নিয়ে আমি পরোয়া করি না।",
+"এমন বিষয়েও আমি তেমন প্রতিক্রিয়া দেখাই না যা অন্যদের আবেগপ্রবণ করে তোলে।",
+"আমার এমন কয়েকটি অভ্যাস আছে যেগুলো অন্যরা অদ্ভুত বা অস্বাভাবিক মনে করে।",
+"আমি সামাজিক অনুষ্ঠান এড়িয়ে চলি।",
+"আমি বিশেষ আচরণ পাওয়ার যোগ্য।",
+"কেউ সামান্যভাবে অপমান করলেও আমি খুব রেগে যাই।",
+"আমি খুব কমই কোনো কিছু নিয়ে উৎসাহী হই।",
+"এমনকি আমার কথিত বন্ধুরাও প্রায়ই আমার সঙ্গে বিশ্বাসঘাতকতা করে—এমন সন্দেহ আমার হয়।",
+"আমি মনোযোগ/দৃষ্টি আকর্ষণ করতে চাই।",
+"কখনো কখনো আমার মনে হয় অন্য কেউ আমার মাথা থেকে চিন্তা সরিয়ে নিচ্ছে।",
+"এমন সময় আমার হয় যখন মনে হয় আমি পৃথিবী থেকে বা নিজের কাছ থেকেই বিচ্ছিন্ন হয়ে গেছি।",
+"আমি প্রায়ই এমন অস্বাভাবিক সম্পর্ক/যোগসূত্র দেখতে পাই যা অধিকাংশ মানুষ দেখতে পায় না।",
+"বিপজ্জনক কিছু করার সময় আমি আহত হওয়ার বিষয়টি নিয়ে চিন্তা করি না।",
+"জিনিসপত্র তাদের নির্ধারিত/যথাযথ স্থানে না থাকলে আমি কোনোভাবেই তা মেনে নিতে পারি না।",
+"আমাকে প্রায়ই এমন মানুষের সঙ্গে কাজ করতে হয় যারা আমার চেয়ে কম গুরুত্বপূর্ণ।",
+"কে কর্তৃত্বে আছে তা মনে করিয়ে দিতে আমি কখনো কখনো মানুষকে আঘাত করি।",
+"সামান্য কোনো বিষয়েও আমার মনোযোগ সহজেই মূল কাজ থেকে সরে যায়।",
+"যারা ক্ষমতার অবস্থানে আছে তাদের বোকা বানাতে আমার ভালো লাগে।",
+"আমার মেজাজ না থাকলে আমি অ্যাপয়েন্টমেন্ট বা মিটিং বাদ দিয়ে দিই।",
+"অন্যরা আমাকে দিয়ে যা করাতে চায়, আমি তা করার চেষ্টা করি।",
+"ঘনিষ্ঠ রোমান্টিক সঙ্গী থাকার চেয়ে আমি একা থাকতে বেশি পছন্দ করি।",
+"আমি খুবই আবেগের বশে/হঠাৎ সিদ্ধান্ত নিয়ে কাজ করি।",
+"আমার এমন কিছু চিন্তা হয় যা আমার কাছে অর্থপূর্ণ, কিন্তু অন্যরা সেগুলোকে অদ্ভুত বলে।",
+"আমি যা চাই তা পাওয়ার জন্য মানুষকে ব্যবহার করি।",
+"আমার কাজের কারণে অন্য মানুষ আহত হলেও সে বিষয়ে অপরাধবোধ করার কোনো প্রয়োজন আমি দেখি না।",
+"অধিকাংশ সময় বন্ধুত্বপূর্ণ হওয়ার কোনো প্রয়োজন আছে বলে আমি মনে করি না।",
+"আমার এমন কিছু অত্যন্ত অদ্ভুত অভিজ্ঞতা হয়েছে যা ব্যাখ্যা করা খুব কঠিন।",
+"আমি আমার প্রতিশ্রুতি ও দায়িত্ব পালন করি।",
+"আমি নিজের প্রতি মানুষের দৃষ্টি আকর্ষণ করতে পছন্দ করি।",
+"আমি বেশিরভাগ সময় অপরাধবোধে ভুগি।",
+"আমি প্রায়ই কিছু সময়ের জন্য চারপাশের ব্যাপারে অন্যমনস্ক বা অমনোযোগী হয়ে যাই এবং হঠাৎ সচেতন হয়ে বুঝতে পারি যে অনেকটা সময় কেটে গেছে।",
+"মিথ্যা বলা আমার কাছে সহজ।",
+"আমি ঝুঁকি নিতে ঘৃণা করি।",
+"যারা এর যোগ্য, তাদের সঙ্গে আমি রূঢ় ও বদমেজাজি আচরণ করি।",
+"আমার আশেপাশের জিনিসগুলো প্রায়ই অবাস্তব মনে হয়, অথবা স্বাভাবিকের চেয়ে বেশি বাস্তব মনে হয়।",
+"এতে আমার সুবিধা হলে আমি সত্যকে কিছুটা বাড়িয়ে বলি।",
+"অন্যদের সুবিধা নেওয়া আমার কাছে সহজ।",
+"আমি কাজ করার একটি কঠোর/নির্দিষ্ট পদ্ধতি অনুসরণ করি।"
+];
+
+const REVERSE = new Set([7,30,35,58,87,90,96,97,98,131,142,155,164,177,210,215]);
+
+const FACETS = [
+["আনন্দহীনতা (Anhedonia)","anhedonia",[1,23,26,30,124,155,157,189]],
+["উদ্বিগ্নতা (Anxiousness)","anxiousness",[79,93,95,96,109,110,130,141,174]],
+["মনোযোগ আকর্ষণপ্রবণতা (Attention Seeking)","attn",[14,43,74,111,113,173,191,211]],
+["নির্মমতা (Callousness)","callous",[11,13,19,54,72,73,90,153,166,183,198,200,207,208]],
+["প্রতারণাপ্রবণতা (Deceitfulness)","deceit",[41,53,56,76,126,134,142,206,214,218]],
+["বিষণ্ণতা (Depressivity)","depress",[27,61,66,81,86,104,119,148,151,163,168,169,178,212]],
+["অমনোযোগীতা (Distractibility)","distract",[6,29,47,68,88,118,132,144,199]],
+["উদ্ভটতা (Eccentricity)","eccentric",[5,21,24,25,33,52,55,70,71,152,172,185,205]],
+["আবেগীয় অস্থিরতা (Emotional Lability)","emolab",[18,62,102,122,138,165,181]],
+["আত্ম-শ্রেষ্ঠত্ববোধ (Grandiosity)","grand",[40,65,114,179,187,197]],
+["শত্রুতাপরায়ণতা (Hostility)","hostile",[28,32,38,85,92,116,158,170,188,216]],
+["আবেগপ্রবণতা/হঠকারিতা (Impulsivity)","impuls",[4,16,17,22,58,204]],
+["ঘনিষ্ঠতা পরিহার (Intimacy Avoidance)","intavoid",[89,97,108,120,145,203]],
+["দায়িত্বজ্ঞানহীনতা (Irresponsibility)","irresp",[31,129,156,160,171,201,210]],
+["কারসাজিপ্রবণতা (Manipulativeness)","manip",[107,125,162,180,219]],
+["উপলব্ধিগত অসংগতি (Perceptual Dysregulation)","percdys",[36,37,42,44,59,77,83,154,192,193,213,217]],
+["পুনরাবৃত্তিপ্রবণতা (Perseveration)","persev",[46,51,60,78,80,100,121,128,137]],
+["সীমিত আবেগ প্রকাশ (Restricted Affectivity)","restraff",[8,45,84,91,101,167,184]],
+["কঠোর নিখুঁততাবাদ (Rigid Perfectionism)","rigidperf",[34,49,105,115,123,135,140,176,196,220]],
+["ঝুঁকিগ্রহণ প্রবণতা (Risk Taking)","risk",[3,7,35,39,48,67,69,87,98,112,159,164,195,215]],
+["বিচ্ছেদ-উদ্বেগ (Separation Insecurity)","sepinsec",[12,50,57,64,127,149,175]],
+["বশ্যতা (Submissiveness)","submiss",[9,15,63,202]],
+["সন্দেহপ্রবণতা (Suspiciousness)","suspic",[2,103,117,131,133,177,190]],
+["অস্বাভাবিক বিশ্বাস ও অভিজ্ঞতা (Unusual Beliefs)","unusual",[94,99,106,139,143,150,194,209]],
+["প্রত্যাহারপ্রবণতা (Withdrawal)","withdraw",[10,20,75,82,136,146,147,161,182,186]]
+];
+
+const DOMAINS = [
+["নেতিবাচক আবেগ (Negative Affect)",["emolab","anxiousness","sepinsec"]],
+["বিচ্ছিন্নতা (Detachment)",["withdraw","anhedonia","intavoid"]],
+["বৈরিতা (Antagonism)",["manip","deceit","grand"]],
+["সংযমহীনতা (Disinhibition)",["irresp","impuls","distract"]],
+["সাইকোটিসিজম (Psychoticism)",["unusual","eccentric","percdys"]]
+];
+
+const RESP_LABELS = [
+  "একেবারে মিথ্যা / প্রায়ই মিথ্যা",
+  "কিছুটা / মাঝে মাঝে মিথ্যা",
+  "কিছুটা / মাঝে মাঝে সত্য",
+  "একেবারে সত্য / প্রায়ই সত্য"
+];
+
+const PAGE_SIZE = 1;
+const TOTAL = ITEMS.length;
+const answers = new Array(TOTAL + 1).fill(null); // 1-indexed
+let currentPage = 0;
+const totalPages = Math.ceil(TOTAL / PAGE_SIZE);
+
+const form = document.getElementById('quizForm');
+const introCard = document.getElementById('introCard');
+const navArea = document.getElementById('navArea');
+const resultsCard = document.getElementById('resultsCard');
+const progressFill = document.getElementById('progressFill');
+const progressLabel = document.getElementById('progressLabel');
+const pageLabel = document.getElementById('pageLabel');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+function buildPage(p){
+  form.innerHTML = '';
+  const start = p*PAGE_SIZE;
+  const end = Math.min(start+PAGE_SIZE, TOTAL);
+  const card = document.createElement('div');
+  card.className = 'card';
+  for(let i=start;i<end;i++){
+    const num = i+1;
+    const item = document.createElement('div');
+    item.className = 'item';
+    const opts = RESP_LABELS.map((lab,val)=>`
+      <label class="opt">
+        <input type="radio" name="q${num}" value="${val}" ${answers[num]===val?'checked':''}>
+        <span>${lab}</span>
+      </label>`).join('');
+    item.innerHTML = `<p class="qtext"><span class="qnum">${num}.</span>${ITEMS[i]}</p><div class="options">${opts}</div>`;
+    card.appendChild(item);
+  }
+  form.appendChild(card);
+  form.querySelectorAll('input[type=radio]').forEach(inp=>{
+    inp.addEventListener('change', e=>{
+      const n = parseInt(e.target.name.slice(1));
+      answers[n] = parseInt(e.target.value);
+      updateProgress();
+    });
+  });
+  pageLabel.textContent = (PAGE_SIZE===1)
+    ? `প্রশ্ন ${start+1} / ${TOTAL}`
+    : `পৃষ্ঠা ${p+1} / ${totalPages}  (প্রশ্ন ${start+1}–${end})`;
+  prevBtn.disabled = (p===0);
+  nextBtn.textContent = (p===totalPages-1) ? 'ফলাফল দেখুন →' : 'পরবর্তী →';
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function updateProgress(){
+  let count = 0;
+  for(let i=1;i<=TOTAL;i++) if(answers[i]!==null) count++;
+  progressFill.style.width = (count/TOTAL*100)+'%';
+  progressLabel.textContent = `${count} / ${TOTAL} প্রশ্নের উত্তর দেওয়া হয়েছে`;
+}
+
+function pageAnswered(p){
+  const start=p*PAGE_SIZE, end=Math.min(start+PAGE_SIZE,TOTAL);
+  for(let i=start;i<end;i++) if(answers[i+1]===null) return false;
+  return true;
+}
+
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  introCard.classList.add('hidden');
+  form.classList.remove('hidden');
+  navArea.classList.remove('hidden');
+  buildPage(0);
+  updateProgress();
+});
+
+prevBtn.addEventListener('click', ()=>{
+  if(currentPage>0){ currentPage--; buildPage(currentPage); }
+});
+nextBtn.addEventListener('click', ()=>{
+  if(currentPage < totalPages-1){
+    currentPage++;
+    buildPage(currentPage);
+  } else {
+    showResults();
+  }
+});
+
+function scoreOf(itemNum){
+  const raw = answers[itemNum];
+  if(raw===null) return null;
+  return REVERSE.has(itemNum) ? (3-raw) : raw;
+}
+
+/*
+  PDF scoring rules:
+  - Reverse-score the 16 specified items.
+  - If more than 25% of a facet's items are unanswered, do not compute it.
+  - If 25% or fewer are unanswered, prorate the raw facet score to the
+    full number of items, then divide by the full facet item count.
+  - A domain is not computed if any of its 3 contributing facets cannot
+    be computed.
+*/
+function computeFacet(label,key,items){
+  const scored = items
+    .map(n => scoreOf(n))
+    .filter(v => v !== null);
+
+  const unanswered = items.length - scored.length;
+  if(unanswered > items.length * 0.25){
+    return {label,key,avg:null,raw:null,prorated:null,answered:scored.length,total:items.length};
+  }
+
+  const raw = scored.reduce((s,v)=>s+v,0);
+  const prorated = unanswered === 0
+    ? raw
+    : raw * (items.length / scored.length);
+
+  const avg = prorated / items.length;
+  return {label,key,avg,raw,prorated,answered:scored.length,total:items.length};
+}
+
+function showResults(){
+  form.classList.add('hidden');
+  navArea.classList.add('hidden');
+  resultsCard.classList.remove('hidden');
+
+  const facetRows = FACETS.map(([label,key,items]) =>
+    computeFacet(label,key,items)
+  );
+
+  const facetAvg = Object.fromEntries(
+    facetRows.map(r => [r.key, r.avg])
+  );
+
+  const domainRows = DOMAINS.map(([label,keys])=>{
+    const vals = keys.map(k => facetAvg[k]);
+    const avg = vals.every(v => v !== null)
+      ? vals.reduce((s,v)=>s+v,0) / vals.length
+      : null;
+    return {label,keys,avg};
+  });
+
+  let html = `<h2 style="margin-top:0;color:var(--accent-dark);font-size:1.15rem;">ফলাফল</h2>
+  <p class="sub">প্রতিটি ট্রেইট ফ্যাসেট ও ডোমেইনের গড় স্কোর ০ থেকে ৩ এর মধ্যে। বেশি স্কোর মানে সেই ক্ষেত্রে অকার্যকারিতার (dysfunction) মাত্রা বেশি। এটি নির্ণয় নয় — শুধুমাত্র প্রবণতার একটি চিত্র।</p>`;
+
+  html += `<div class="domain-block"><div class="domain-title">প্রধান ট্রেইট ডোমেইন</div>`;
+  domainRows.forEach(r=>{
+    const unavailable = r.avg === null;
+    const score = unavailable ? 'N/A' : r.avg.toFixed(2);
+    const width = unavailable ? 0 : (r.avg/3*100);
+    html += `<div class="facet-row"><div class="facet-name">${r.label}</div><div class="bar-track"><div class="bar-fill" style="width:${width.toFixed(0)}%"></div></div><div class="facet-score">${score}</div></div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="domain-block"><div class="domain-title">সব ট্রেইট ফ্যাসেট</div>`;
+  facetRows.forEach(r=>{
+    const unavailable = r.avg === null;
+    const score = unavailable ? 'N/A' : r.avg.toFixed(2);
+    const width = unavailable ? 0 : (r.avg/3*100);
+    html += `<div class="facet-row"><div class="facet-name">${r.label}</div><div class="bar-track"><div class="bar-fill" style="width:${width.toFixed(0)}%"></div></div><div class="facet-score">${score}</div></div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="notice warn">এই ফলাফল স্ব-প্রতিবেদিত (self-reported) তথ্যের ভিত্তিতে তৈরি এবং এটি ক্লিনিক্যাল নির্ণয়ের বিকল্প নয়। ফলাফল নিয়ে দুশ্চিন্তা হলে বা মানসিক কষ্ট অনুভব করলে একজন যোগ্য মানসিক স্বাস্থ্য বিশেষজ্ঞের সাথে কথা বলুন।</div>`;
+
+  html += `<div class="actions">
+    <button type="button" id="downloadBtn">RAW ডেটা ডাউনলোড (.txt)</button>
+    <button type="button" class="ghost" id="emailBtn">ইমেইলে RAW ডেটা পাঠান</button>
+  </div>`;
+
+  resultsCard.innerHTML = html;
+
+  document.getElementById('downloadBtn').addEventListener('click', ()=>doDownload(facetRows, domainRows));
+  document.getElementById('emailBtn').addEventListener('click', ()=>doEmail(facetRows, domainRows));
+
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function buildRawText(facetRows, domainRows){
+  const name = document.getElementById('fName').value || '(দেওয়া হয়নি)';
+  const age = document.getElementById('fAge').value || '(দেওয়া হয়নি)';
+  const sex = document.getElementById('fSex').value || '(দেওয়া হয়নি)';
+  const date = document.getElementById('fDate').value || new Date().toISOString().slice(0,10);
+  let out = `PID-5 (Adult) — বাংলা সংস্করণ — RAW DATA\n`;
+  out += `নাম/আইডি: ${name}\nবয়স: ${age}\nলিঙ্গ: ${sex}\nতারিখ: ${date}\n\n`;
+  out += `--- প্রতিটি প্রশ্নের কাঁচা উত্তর (item, raw 0-3) ---\n`;
+  for(let i=1;i<=TOTAL;i++){
+    out += `Q${i}: ${answers[i]}\n`;
+  }
+  out += `\n--- ফ্যাসেট স্কোর (PDF scoring rules) ---\n`;
+  facetRows.forEach(r=>{
+    const avg = r.avg===null ? 'N/A' : r.avg.toFixed(4);
+    const raw = r.raw===null ? 'N/A' : r.raw.toFixed(4);
+    const prorated = r.prorated===null ? 'N/A' : r.prorated.toFixed(4);
+    out += `${r.label}: Raw=${raw}, Prorated Raw=${prorated}, Average=${avg}, Answered=${r.answered}/${r.total}\n`;
+  });
+  out += `\n--- ডোমেইন গড় স্কোর (PDF scoring rules) ---\n`;
+  domainRows.forEach(r=>{
+    const avg = r.avg===null ? 'N/A' : r.avg.toFixed(4);
+    out += `${r.label}: ${avg}\n`;
+  });
+  return out;
+}
+
+async function doDownload(facetRows, domainRows){
+  const text = buildRawText(facetRows, domainRows);
+  const filename = 'pid5_raw_data.txt';
+  try{
+    const downloads = await claude.use('downloads');
+    if(downloads){
+      await downloads.save({filename, data:text});
+      return;
+    }
+  }catch(e){}
+  // fallback for environments without the capability
+  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function doEmail(facetRows, domainRows){
+  const text = buildRawText(facetRows, domainRows);
+  const subject = encodeURIComponent('PID-5 বাংলা — ফলাফল (RAW DATA)');
+  const body = encodeURIComponent(text);
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
+</script>
+</body>
+</html>
