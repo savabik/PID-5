@@ -638,7 +638,9 @@ function doEmail(facetRows, domainRows){
   const text = buildRawText(facetRows, domainRows);
   const subject = encodeURIComponent('PID-5 বাংলা — ফলাফল (RAW DATA)');
   const body = encodeURIComponent(text);
-  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+
+  window.location.href =
+    `mailto:sakirulislamapon@gmail.com?subject=${subject}&body=${body}`;
 }
 </script>
 </body>
